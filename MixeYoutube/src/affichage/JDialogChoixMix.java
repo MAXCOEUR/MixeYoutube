@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
@@ -22,13 +23,27 @@ public class JDialogChoixMix extends JDialog implements ActionListener{
     private JComboBox<String> Mix = new JComboBox();
     JLabel Choix = new JLabel("Choix de la piste : ");
     JButton valider = new JButton("Valider");
+    public ArrayList<LecteurMp3> Piste;
     int i;
 
-    public JDialogChoixMix(MaFenetre fen,int j) {
+    public JDialogChoixMix(MaFenetre fen,ArrayList<LecteurMp3> m) {
         super(fen,true);
-        for (int i = 1; i <= j; i++) {
+        this.Piste=m;
+        for (int i = 1; i <= Piste.size(); i++) {
             Mix.addItem(Integer.toString(i));
         }
+        
+        int u;
+        for (u = 0; u < Piste.size(); u++) {
+            if (!Piste.get(u).isIsPlay()) {
+                Mix.setSelectedIndex(u);
+                break;
+            }
+        }
+        if (u==Piste.size()) {
+            Mix.setSelectedIndex(0);
+        }
+        
         
         this.setTitle("Choix Piste");
         

@@ -68,7 +68,7 @@ public class PanoDir extends JApplet{
         
         JPanel tmp = new JPanel();
         tmp.setLayout(new GridBagLayout());
-        System.out.println((getPreferredSize().width-10)/tailleFolder.width);
+//        System.out.println((getPreferredSize().width-10)/tailleFolder.width);
         for (int i = 0; i < listeDirectoryButton.size(); i++) {
             
             cont.gridx=i%((getPreferredSize().width-10)/tailleFolder.width);

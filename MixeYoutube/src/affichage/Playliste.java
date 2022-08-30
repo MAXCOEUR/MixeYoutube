@@ -64,9 +64,13 @@ public class Playliste extends JPanel implements ActionListener{
                     if (chemain.exists()) {
                         Scanner sc = new Scanner(chemain);
                         sc.useDelimiter(";");
-                        sc.next();
-                        sc.next();
-                        listeMusique.add(new DownLoadMusique(file.getFileName().toString(),Float.valueOf(sc.next())));
+                        try {
+                            sc.next();
+                            sc.next();
+                            listeMusique.add(new DownLoadMusique(file.getFileName().toString(),Float.valueOf(sc.next())));
+                        } catch (Exception e) {
+                        }
+                        
                     }
                     else{
                         listeMusique.add(new DownLoadMusique(file.getFileName().toString(),null));

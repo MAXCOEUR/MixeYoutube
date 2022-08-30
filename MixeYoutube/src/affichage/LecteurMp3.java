@@ -5,8 +5,8 @@
 package affichage;
 
 import MixeYoutube.Chronometre;
-import MixeYoutube.ColorListe;
 import MixeYoutube.DurationBar;
+import MixeYoutube.ThreadAnalyze;
 import MixeYoutube.ThreadBPM;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.MultimediaInfo;
@@ -19,7 +19,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -133,8 +132,11 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
                 ThreadBPM bpm = new ThreadBPM(link,bpmLabel);
                 bpm.start();
                 
+                ThreadAnalyze anal = new ThreadAnalyze(link);
+                anal.start();
+                
                 time.reset();
-                System.out.println(link.toString());
+//                System.out.println(link.toString());
                 mp3Player.open(link);
                 mp3Player.play();
                 mp3Player.pause();
@@ -167,6 +169,11 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
         
         
     }
+
+    public boolean isIsPlay() {
+        return isPlay;
+    }
+    
     
     @Override
     public Dimension getPreferredSize() {

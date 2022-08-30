@@ -6,7 +6,6 @@ package affichage;
 
 import MixeYoutube.ApiRecherche;
 import MixeYoutube.Musique;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 
 /**
  *

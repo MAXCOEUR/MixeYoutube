@@ -11,8 +11,6 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -33,6 +31,7 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
     public static Dimension tailleFenetre;
     private Recherche recheche;
     private Playliste playliste;
+    private YoutubeDownloadLink YTLink ;
    
     JTabbedPane multiZone = new JTabbedPane();
     
@@ -73,6 +72,7 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
         multiZone.removeAll();
         recheche= new Recherche();
         playliste = new Playliste(this);
+        YTLink = new YoutubeDownloadLink();
         
         listeMusique = playliste.listeMusique;
         listeFile = playliste.listeFile;
@@ -80,6 +80,8 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
         multiZone.add("Playlist",playliste);
         
         multiZone.add("Recherche Youtube",recheche);
+        
+        multiZone.add("Dowload lien Youtube", YTLink);
         
         multiZone.setPreferredSize(new Dimension(tailleFenetre.width/2-10, tailleFenetre.height-20));
         
@@ -138,7 +140,9 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        ;
+        if (e.getSource()==multiZone) {
+            YTLink.Jtexte.setText("mettre le lien");
+        }
     }
 
     @Override
@@ -146,7 +150,7 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
         
         for (int i = 0; i < listeMusique.size(); i++) {
             if (e.getSource()==listeMusique.get(i)) {
-                JDialogChoixMix tmp = new JDialogChoixMix(this,mix.size());
+                JDialogChoixMix tmp = new JDialogChoixMix(this,mix);
                 tmp.setLocation(new Point(e.getXOnScreen(), e.getYOnScreen()));
                 int j = tmp.showDialog();
                 mix.get(j).mettreMusique(listeFile.get(i));

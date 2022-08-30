@@ -41,6 +41,13 @@ public class ThreadDownload extends Thread{
                         if (s.endsWith(".mp3")) {
                             File fichier = new File("./"+s+"");
                             File rep = new File("./PlayList/Download/");
+                            File Playlist = new File("./PlayList/");
+                            if (!Playlist.isDirectory()) {
+                                Playlist.mkdir();
+                            }
+                            if (!rep.isDirectory()) {
+                                rep.mkdir();
+                            }
                             boolean resultat = fichier.renameTo(new File(rep, fichier.getName()));
                             if (resultat)
                                 {

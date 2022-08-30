@@ -40,7 +40,7 @@ public class ThreadBPM extends Thread{
 //                        System.out.println(s+" "+link.getName()+".bpm");
                         if (s.equals(link.getName()+".bpm")) {
                             isExiste=true;
-                            System.out.println(s);
+//                            System.out.println(s);
                         }
                     }
         } catch (IOException ex) {

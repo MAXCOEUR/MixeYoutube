@@ -34,7 +34,7 @@ public class Recherche extends JPanel implements ActionListener, FocusListener, 
     static public Dimension tailleRecheche;
 
     public Recherche() {
-        tailleRecheche=new Dimension(MaFenetre.tailleFenetre.width/2-20, MaFenetre.tailleFenetre.height-70);
+        tailleRecheche=new Dimension((int) (MaFenetre.tailleFenetre.width/2*0.99), MaFenetre.tailleFenetre.height-70);
         
         resulat.clear();
         Liste = ApiRecherche.Recherche();

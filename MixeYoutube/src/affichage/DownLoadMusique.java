@@ -4,17 +4,11 @@
  */
 package affichage;
 
-import affichage.Recherche;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -65,7 +59,7 @@ public class DownLoadMusique extends JPanel {
     
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(Recherche.tailleRecheche.width-20, 30);
+        return new Dimension((int) (Recherche.tailleRecheche.width*0.95), 30);
     }
 
     

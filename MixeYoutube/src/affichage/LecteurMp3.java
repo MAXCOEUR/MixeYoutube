@@ -70,12 +70,12 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
         resetButton.setBackground(Color.ORANGE);
         resetButton.setPreferredSize(new Dimension(70, 40));
         songProgressBar = new JProgressBar();
-        songProgressBar.setPreferredSize(new Dimension(getPreferredSize().width-10, 20));
+        songProgressBar.setPreferredSize(new Dimension((int) (getPreferredSize().width*0.99), 20));
         songProgressBar.setStringPainted(true);
         songProgressBar.setForeground(Color.RED);
         
         volumeSlider = new JSlider(0, 10000, 10000);
-        volumeSlider.setPreferredSize(new Dimension(getPreferredSize().width-70*5-2, 40));
+        volumeSlider.setPreferredSize(new Dimension((int) ((getPreferredSize().width-70*5)*0.99), 40));
         
 //        titre.setBackground(ColorListe.Black);
 //        titre.setForeground(Color.white);
@@ -177,7 +177,7 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
     
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(Mixage.tailleMixage.width-20, 100);
+        return new Dimension((int) (Mixage.tailleMixage.width*0.99), 100);
     }
     
     @Override

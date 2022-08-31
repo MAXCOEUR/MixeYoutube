@@ -25,9 +25,11 @@ public class PanoDir extends JApplet{
     public ArrayList<JButton> listeDirectoryButton = new ArrayList<>();
     private JScrollPane scroll;
     private JPanel panoDir= new JPanel();
-    public JButton retour = new JButton("retour");
-    public JButton actualiser = new JButton("actualiser");
+    public JButton retour = new JButton("Retour");
+    public JButton actualiser = new JButton("Actualiser");
+    public JButton ExplorateurFichier = new JButton("Fichier");
     public JButton ouvrir = new JButton("Ouvrir");
+    public JButton download = new JButton("Download");
     
     private Dimension tailleFolder = new Dimension(150, 30);
 
@@ -37,48 +39,67 @@ public class PanoDir extends JApplet{
         
         retour.setPreferredSize(tailleFolder);
         actualiser.setPreferredSize(tailleFolder);
+        ExplorateurFichier.setPreferredSize(tailleFolder);
         ouvrir.setPreferredSize(tailleFolder);
+        download.setPreferredSize(tailleFolder);
         for (JButton b : listeDirectoryButton) {
             b.setPreferredSize(tailleFolder);
             b.setBackground(Color.cyan);
         }
         
-        panoDir.setBorder(new LineBorder(Color.BLACK));
         
         panoDir.setLayout(new GridBagLayout());
         GridBagConstraints cont = new GridBagConstraints();
+        
+        JPanel tmp2 = new JPanel();
+        tmp2.setLayout(new GridBagLayout());
+        
         cont.gridx=0;
         cont.gridy=0;
-        cont.gridwidth=3;
-        panoDir.add(new JLabel("Dossier : "+Playliste.path),cont);
+        cont.gridwidth=5;
+        tmp2.add(new JLabel("Dossier : "+Playliste.path),cont);
         cont.gridx=0;
         cont.gridy=1;
         cont.gridwidth=1;
         retour.setBackground(Color.white);
         retour.setForeground(Color.black);
-        panoDir.add(retour,cont);
+        tmp2.add(retour,cont);
         cont.gridx=1;
         actualiser.setBackground(Color.white);
         actualiser.setForeground(Color.black);
-        panoDir.add(actualiser,cont);
+        tmp2.add(actualiser,cont);
         cont.gridx=2;
         ouvrir.setBackground(Color.white);
         ouvrir.setForeground(Color.black);
-        panoDir.add(ouvrir,cont);
+        tmp2.add(ouvrir,cont);
+        cont.gridx=3;
+        ExplorateurFichier.setBackground(Color.white);
+        ExplorateurFichier.setForeground(Color.black);
+        tmp2.add(ExplorateurFichier,cont);
+        cont.gridx=4;
+        download.setBackground(Color.white);
+        download.setForeground(Color.black);
+        tmp2.add(download,cont);
+        
+        
+        
+        
         
         JPanel tmp = new JPanel();
         tmp.setLayout(new GridBagLayout());
-//        System.out.println((getPreferredSize().width-10)/tailleFolder.width);
         for (int i = 0; i < listeDirectoryButton.size(); i++) {
             
-            cont.gridx=i%((getPreferredSize().width-10)/tailleFolder.width);
-            cont.gridy=i/((getPreferredSize().width-10)/tailleFolder.width);
+            cont.gridx=(int) (i%((getPreferredSize().width*0.95)/tailleFolder.width));
+            cont.gridy=(int) (i/((getPreferredSize().width*0.95)/tailleFolder.width));
             tmp.add(listeDirectoryButton.get(i), cont);
         }
-        
         cont.gridx=0;
-        cont.gridy=2;
-        cont.gridwidth=3;
+        cont.gridy=0;
+        cont.gridwidth=1;
+        panoDir.add(tmp2,cont);
+        cont.gridx=0;
+        cont.gridy=1;
+        cont.gridwidth=1;
         panoDir.add(tmp,cont);
         this.add(scroll);
     }

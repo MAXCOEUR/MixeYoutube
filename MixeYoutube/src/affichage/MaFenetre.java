@@ -11,12 +11,15 @@ import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.ArrayList;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -31,7 +34,10 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
     public static Dimension tailleFenetre;
     private Recherche recheche;
     private Playliste playliste;
+    private Playliste playlisteD;
     private YoutubeDownloadLink YTLink ;
+    
+    private JButton actualiserDownload = new JButton("Actualiser");
    
     JTabbedPane multiZone = new JTabbedPane();
     
@@ -74,8 +80,12 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
         playliste = new Playliste(this);
         YTLink = new YoutubeDownloadLink();
         
+        
         listeMusique = playliste.listeMusique;
         listeFile = playliste.listeFile;
+        
+        
+        
         
         multiZone.add("Playlist",playliste);
         
@@ -93,7 +103,6 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
         //ajout du gestionnaire de placement de pano
         
         pano.setLayout(new GridBagLayout());
-        
         GridBagConstraints cont = new GridBagConstraints();
         
         //placment des composants
@@ -134,7 +143,8 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
     @Override
     public Dimension getPreferredSize() {
         Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        tailleEcran = new Dimension(tailleEcran.width, tailleEcran.height-30);
+        tailleEcran = new Dimension(tailleEcran.width, (int) (tailleEcran.height*0.96));
+//        tailleEcran = new Dimension(1920, (int) (720*0.96));
         return tailleEcran;
     }
 
@@ -189,4 +199,6 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
             }
         }
     }
+
+   
 }

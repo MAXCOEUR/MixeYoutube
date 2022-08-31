@@ -23,6 +23,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 /**
  *
  * @author Maxen
@@ -36,10 +37,13 @@ public class Playliste extends JPanel implements ActionListener{
     
     private JButton retour;
     private JButton actualiser;
+    private JButton ExplorateurFichier;
     private JButton ouvrir;
+    private JButton download;
     private ArrayList<JButton> listeDirectoryButton  = new ArrayList<>();
     
     static public String path=".\\PlayList";
+    static public String pathOriginal=".\\PlayList";
     
     private MaFenetre fen;
 
@@ -47,7 +51,11 @@ public class Playliste extends JPanel implements ActionListener{
         this.fen=fen;
         Actualiser(path);
     }
-    private void Actualiser(String path){
+    public Playliste(MaFenetre fen,String file) {
+        this.fen=fen;
+        Actualiser(file);
+    }
+    public void Actualiser(String path){
         listeMusique.clear();
         listeFile.clear();
         listeDirectoryButton.clear();
@@ -93,10 +101,14 @@ public class Playliste extends JPanel implements ActionListener{
         PanoDir panoDir = new PanoDir(listeDirectoryButton);
         retour=panoDir.retour;
         actualiser=panoDir.actualiser;
+        ExplorateurFichier=panoDir.ExplorateurFichier;
         ouvrir=panoDir.ouvrir;
+        download=panoDir.download;
         retour.addActionListener(this);
         actualiser.addActionListener(this);
+        ExplorateurFichier.addActionListener(this);
         ouvrir.addActionListener(this);
+        download.addActionListener(this);
 //        JPanel panoMusique= new JPanel();
 //        panoMusique.setBorder(new LineBorder(Color.BLACK));
 //        panoMusique.setLayout(new GridBagLayout());
@@ -160,9 +172,8 @@ public class Playliste extends JPanel implements ActionListener{
         
         if (e.getSource()==actualiser) {
             Actualiser(path);
-            
         }
-        if (e.getSource()==ouvrir) {
+        if (e.getSource()==ExplorateurFichier) {
             File fils =new File(path);
                 try {
                     Desktop.getDesktop().open(new File(fils.getAbsolutePath()));
@@ -170,13 +181,31 @@ public class Playliste extends JPanel implements ActionListener{
                     Logger.getLogger(MaFenetre.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
+        if (e.getSource()==download) {
+            path =".\\Playlist\\Download";
+            Actualiser(path);
+        }
+        if (e.getSource()==ouvrir) {
+            JFileChooser jfc = new JFileChooser();
+            jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            int ret = jfc.showOpenDialog(null); // ne te rend la main que si tu ferme
+            if(ret == JFileChooser.APPROVE_OPTION) { // validation
+                path = jfc.getSelectedFile().toString();
+                pathOriginal =jfc.getSelectedFile().toString();
+                Actualiser(path);
+            }
+        }
         if (e.getSource()==retour) {
             File tmp = new File(path);
             
-            if (tmp.getParent().startsWith(".\\PlayList")) {
+            if (tmp.getParent()!=null&&tmp.getParent().startsWith(pathOriginal)) {
                 path = tmp.getParent();
                 Actualiser(path);
                 
+            }
+            else{
+                path=pathOriginal;
+                Actualiser(pathOriginal);
             }
             try {
                 Thread.sleep(10);

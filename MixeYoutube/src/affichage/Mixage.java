@@ -46,7 +46,7 @@ public class Mixage extends JPanel{
     
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(MaFenetre.tailleFenetre.width/2-10, MaFenetre.tailleFenetre.height-20);
+        return new Dimension((int) (MaFenetre.tailleFenetre.width/2*0.99), (int) (MaFenetre.tailleFenetre.height*0.98));
     }
     
     

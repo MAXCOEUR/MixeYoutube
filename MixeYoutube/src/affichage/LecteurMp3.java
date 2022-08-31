@@ -19,6 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -39,13 +40,15 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
  */
 public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener,MouseListener{
     private JLabel titre,piste,bpmLabel;
-    private JButton playButton, resetButton;
-    private JProgressBar songProgressBar;
+    private JButton playButton, resetButton, liste;
+    public JProgressBar songProgressBar;
     private JSlider volumeSlider; 
     private boolean isPlay = false;
     
-    private Chronometre time = new Chronometre();
-    private long ls;
+    public ArrayList<File> listeMusique = new ArrayList<>();
+    
+    public Chronometre time = new Chronometre();
+    public long ls;
     DurationBar tpmp;
     private long taille;
     
@@ -69,13 +72,19 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
         resetButton = new JButton("Reset");
         resetButton.setBackground(Color.ORANGE);
         resetButton.setPreferredSize(new Dimension(70, 40));
+        liste = new JButton("Liste");
+        liste.setBackground(Color.PINK);
+        liste.setPreferredSize(new Dimension(70, 40));
         songProgressBar = new JProgressBar();
         songProgressBar.setPreferredSize(new Dimension((int) (getPreferredSize().width*0.99), 20));
         songProgressBar.setStringPainted(true);
         songProgressBar.setForeground(Color.RED);
         
         volumeSlider = new JSlider(0, 10000, 10000);
-        volumeSlider.setPreferredSize(new Dimension((int) ((getPreferredSize().width-70*5)*0.99), 40));
+        volumeSlider.setPreferredSize(new Dimension((int) ((getPreferredSize().width-70*6)*0.99), 40));
+        
+        tpmp = new DurationBar(this);
+        tpmp.start();
         
 //        titre.setBackground(ColorListe.Black);
 //        titre.setForeground(Color.white);
@@ -97,11 +106,11 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
         
         cont.gridx=0;
         cont.gridy=0;
-        cont.gridwidth=5;
+        cont.gridwidth=6;
         this.add(titre, cont);
         cont.gridx=0;
         cont.gridy=1;
-        cont.gridwidth=5;
+        cont.gridwidth=6;
         this.add(songProgressBar, cont);
         
         cont.gridx=0;
@@ -117,10 +126,13 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
         cont.gridx=3;
         this.add(volumeSlider, cont);
         cont.gridx=4;
+        this.add(liste, cont);
+        cont.gridx=5;
         this.add(piste, cont);
         
         playButton.addActionListener(this);
         resetButton.addActionListener(this);
+        liste.addActionListener(this);
         volumeSlider.addChangeListener(this);
         
         songProgressBar.addMouseListener(this);
@@ -155,19 +167,90 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
                     e.printStackTrace();
                 }
                 
-                if (tpmp!=null) {
-                    tpmp.stop();
-                }
-                tpmp = new DurationBar(songProgressBar, ls, time);
+                tpmp.reset(this);
                 
-                tpmp.start();
+//                tpmp.start();
                 
             } catch (BasicPlayerException ex) {
                 Logger.getLogger(LecteurMp3.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        else{
+            listeMusique.add(link);
+//            System.out.println(listeMusique);
+        }
+    }
+    
+    public void passMusique(){
+//        System.out.println(listeMusique.isEmpty());
+        if (listeMusique.isEmpty()) {
+//            pauseMusique();
+        }
+        else{
+            try {
+                BasicPlayer tmp = new BasicPlayer();
+                ThreadBPM bpm = new ThreadBPM(listeMusique.get(0),bpmLabel);
+                bpm.start();
+                
+                ThreadAnalyze anal = new ThreadAnalyze(listeMusique.get(0));
+                anal.start();
+                
+                time.reset();
+                tmp.open(listeMusique.get(0));
+
+
+                tmp.play();
+                titre.setText(listeMusique.get(0).getName());
+                tmp.setGain(volumeSlider.getValue()/10000.0);
+                isPlay=true;
+                
+                taille = listeMusique.get(0).length();
+                
+                Encoder encoder = new Encoder();
+                try {
+                    MultimediaInfo mi = encoder.getInfo(listeMusique.get(0));
+                    ls = mi.getDuration();
+                    ls=ls/1000;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
+                mp3Player=tmp;
+                tpmp.reset(this);
+                time.play();
+
+                listeMusique.remove(0);
+            } catch (BasicPlayerException ex) {
+                Logger.getLogger(LecteurMp3.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         
-        
+    }
+    
+    public void pauseMusique(){
+        try {
+            mp3Player.pause();
+            playButton.setBackground(Color.GREEN);
+            resetButton.setEnabled(true);
+            playButton.setText("Play");
+            isPlay=false;
+            time.pause();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(LecteurMp3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void playMusique(){
+        try { 
+            mp3Player.resume();
+            playButton.setBackground(Color.red);
+            resetButton.setEnabled(false);
+            playButton.setText("Pause");
+            isPlay=true;
+            time.play();
+        } catch (BasicPlayerException ex) {
+            System.out.println(ex);
+        }
     }
 
     public boolean isIsPlay() {
@@ -182,31 +265,16 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
     
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==liste) {
+            JDialogListe tmp = new JDialogListe(listeMusique);
+            tmp.showDialog();
+        }
         if (e.getSource()==playButton) {
             if (!isPlay) {
-                try {
-                    
-                    mp3Player.resume();
-                    playButton.setBackground(Color.red);
-                    resetButton.setEnabled(false);
-                    playButton.setText("Pause");
-                    isPlay=true;
-                    time.play();
-                } catch (BasicPlayerException ex) {
-                    ;
-                }
+                playMusique();
             }
             else{
-                try {
-                    mp3Player.pause();
-                    playButton.setBackground(Color.GREEN);
-                    resetButton.setEnabled(true);
-                    playButton.setText("Play");
-                    isPlay=false;
-                    time.pause();
-                } catch (BasicPlayerException ex) {
-                    ;
-                }
+                pauseMusique();
             }
             
         }
@@ -214,9 +282,6 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
             if (!isPlay) {
                 try {
                     time.reset();
-                    if (isPlay) {
-                        time.play();
-                    }
                     mp3Player.seek(0);
                 } catch (BasicPlayerException ex) {
                     Logger.getLogger(LecteurMp3.class.getName()).log(Level.SEVERE, null, ex);

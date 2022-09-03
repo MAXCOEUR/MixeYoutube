@@ -44,6 +44,8 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
     public JProgressBar songProgressBar;
     private JSlider volumeSlider; 
     private boolean isPlay = false;
+    private double volumeMaster=1.0;
+    private double volumeChange=1.0;
     
     public ArrayList<File> listeMusique = new ArrayList<>();
     
@@ -59,7 +61,6 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
 
     public LecteurMp3(int i) {
         
-        time.start();
         titre= new JLabel("");
         piste= new JLabel("Piste "+i);
         piste.setPreferredSize(new Dimension(70, 40));
@@ -138,6 +139,16 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
         songProgressBar.addMouseListener(this);
     }
     
+    public void ChangeMaster(double max){
+        volumeMaster=max;
+        stateChanged(new ChangeEvent(volumeSlider));
+    }
+    
+    public void ChangeChange(double vol){
+        volumeChange=vol;
+        stateChanged(new ChangeEvent(volumeSlider));
+    }
+    
     public void mettreMusique(File link){
         if (!isPlay) {
             try {
@@ -153,7 +164,7 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
                 mp3Player.play();
                 mp3Player.pause();
                 titre.setText(link.getName());
-                mp3Player.setGain(volumeSlider.getValue()/10000.0);
+                mp3Player.setGain(volumeSlider.getValue()/10000.0*volumeMaster*volumeChange);
                 isPlay=false;
                 
                 taille = link.length();
@@ -201,7 +212,7 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
 
                 tmp.play();
                 titre.setText(listeMusique.get(0).getName());
-                tmp.setGain(volumeSlider.getValue()/10000.0);
+                tmp.setGain(volumeSlider.getValue()/10000.0*volumeMaster*volumeChange);
                 isPlay=true;
                 
                 taille = listeMusique.get(0).length();
@@ -305,7 +316,8 @@ public class LecteurMp3 extends JPanel implements ActionListener, ChangeListener
     public void stateChanged(ChangeEvent e) {
         if (e.getSource()==volumeSlider) {
             try {
-                mp3Player.setGain(volumeSlider.getValue()/10000.0);
+//                System.out.println("volMaster : "+volumeMaster+" volChange : "+volumeChange);
+                mp3Player.setGain(volumeSlider.getValue()/10000.0*volumeMaster*volumeChange);
             } catch (BasicPlayerException ex) {
                 ;
             }

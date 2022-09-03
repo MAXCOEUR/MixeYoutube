@@ -59,7 +59,7 @@ public class DownLoadMusique extends JPanel {
     
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension((int) (Recherche.tailleRecheche.width*0.95), 30);
+        return new Dimension((int) (Recherche.tailleRecheche.width*0.90), 30);
     }
 
     

@@ -8,19 +8,31 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
  * @author Maxen
  */
-public class Mixage extends JPanel{
+public class Mixage extends JPanel implements ChangeListener , ActionListener{
     public ArrayList<LecteurMp3> mix= new ArrayList<>();
     static public Dimension tailleMixage;
+    static public JSlider volumeMaster; 
+    int nbrPiste;
+    
+    static public JComboBox<Integer> Choix1= new JComboBox<>();
+    static public JComboBox<Integer> Choix2= new JComboBox<>();
+    
+    static public JSlider volumeChangement; 
     
     
     public Mixage() {
@@ -28,18 +40,50 @@ public class Mixage extends JPanel{
         this.setLayout(new GridBagLayout());
         GridBagConstraints cont = new GridBagConstraints();
         tailleMixage=getPreferredSize();
+        nbrPiste=(getPreferredSize().height-100)/100;
         
-        for (int i = 0; i < (getPreferredSize().height-100)/100; i++) {
+        volumeMaster = new JSlider(0, 10000, 10000);
+        volumeMaster.setPreferredSize(new Dimension((int)(getPreferredSize().width*0.40), 40));
+        volumeMaster.addChangeListener(this);
+        
+        volumeChangement = new JSlider(0, 20000, 10000);
+        volumeChangement.setPreferredSize(new Dimension((int)(getPreferredSize().width*0.40), 40));
+        volumeChangement.addChangeListener(this);
+        volumeChangement.setPaintTrack(true); 
+        volumeChangement.setPaintTicks(true);
+        volumeChangement.setMajorTickSpacing(100000); 
+        volumeChangement.setMinorTickSpacing(10000); 
+        
+        Choix1.addActionListener(this);
+        Choix2.addActionListener(this);
+        
+        cont.gridx=0;
+        cont.gridy=0;
+        this.add(new JLabel("Master : "),cont);
+        cont.gridx=1;
+        cont.gridy=0;
+        this.add(volumeMaster,cont);
+        
+        cont.gridx=2;
+        cont.gridy=0;
+        this.add(new JLabel("Changement : "),cont);
+        cont.gridx=3;
+        cont.gridy=0;
+        this.add(Choix1,cont);
+        cont.gridx=4;
+        cont.gridy=0;
+        this.add(volumeChangement,cont);
+        cont.gridx=5;
+        cont.gridy=0;
+        this.add(Choix2,cont);
+        
+        for (int i = 0; i < nbrPiste; i++) {
+            Choix1.addItem(i+1);
+            Choix2.addItem(i+1);
             mix.add(new LecteurMp3(i+1));
             cont.gridx=0;
             cont.gridy=i*2+1;
-            JLabel tmp = new JLabel(" ");
-            tmp.setBackground(new Color(2, 2, 22));
-            tmp.setPreferredSize(new Dimension(getPreferredSize().width, 100/(((getPreferredSize().height-100)/100)+1)));
-            this.add(tmp,cont);
-            cont.gridx=0;
-            cont.gridy=i*2;
-//            mix.get(i).setBorder(BorderFactory.createEmptyBorder(10, 2,10, 2));
+            cont.gridwidth=7;
             this.add(mix.get(i), cont);
         }
     }
@@ -47,6 +91,50 @@ public class Mixage extends JPanel{
     @Override
     public Dimension getPreferredSize() {
         return new Dimension((int) (MaFenetre.tailleFenetre.width/2*0.99), (int) (MaFenetre.tailleFenetre.height*0.98));
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent e) {
+        if (e.getSource()==volumeMaster) {
+            for (int i = 0; i < mix.size(); i++) {
+                mix.get(i).ChangeMaster(volumeMaster.getValue()/10000.0);
+            }
+        }
+        if (e.getSource()==volumeChangement) {
+            for (int i = 0; i < mix.size(); i++) {
+                if (i==Choix1.getSelectedIndex()) {
+                    if (volumeChangement.getValue()<=10000) {
+                        mix.get(i).ChangeChange(1.0);
+                    }
+                    else{
+                        mix.get(i).ChangeChange((Math.abs(volumeChangement.getValue()-20000))/10000.0);
+                    }
+                    
+                }
+                else if (i==Choix2.getSelectedIndex()) {
+                    if (volumeChangement.getValue()>=10000) {
+                        mix.get(i).ChangeChange(1.0);
+                    }
+                    else{
+                        mix.get(i).ChangeChange(volumeChangement.getValue()/10000.0);
+                    }
+                    
+                }
+                else {
+                    mix.get(i).ChangeChange(1.0);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==Choix1) {
+            stateChanged(new ChangeEvent(volumeChangement));
+        }
+        if (e.getSource()==Choix2) {
+            stateChanged(new ChangeEvent(volumeChangement));
+        }
     }
     
     

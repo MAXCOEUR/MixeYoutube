@@ -144,7 +144,7 @@ public class MaFenetre extends JFrame implements MouseListener, FocusListener,Ch
     public Dimension getPreferredSize() {
         Dimension tailleEcran = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         tailleEcran = new Dimension(tailleEcran.width, (int) (tailleEcran.height*0.96));
-//        tailleEcran = new Dimension(1920, (int) (720*0.96));
+//        tailleEcran = new Dimension(1920, (int) (710*0.96));
         return tailleEcran;
     }
 

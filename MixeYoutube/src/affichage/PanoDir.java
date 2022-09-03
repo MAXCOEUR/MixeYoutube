@@ -32,16 +32,17 @@ public class PanoDir extends JApplet{
     public JButton download = new JButton("Download");
     
     private Dimension tailleFolder = new Dimension(150, 30);
+    private Dimension tailleBout =new Dimension(100, 30);
 
     public PanoDir(ArrayList<JButton> listeDirectoryButton) throws HeadlessException {
         scroll = new JScrollPane(panoDir);
         this.listeDirectoryButton=listeDirectoryButton;
         
-        retour.setPreferredSize(tailleFolder);
-        actualiser.setPreferredSize(tailleFolder);
-        ExplorateurFichier.setPreferredSize(tailleFolder);
-        ouvrir.setPreferredSize(tailleFolder);
-        download.setPreferredSize(tailleFolder);
+        retour.setPreferredSize(tailleBout);
+        actualiser.setPreferredSize(tailleBout);
+        ExplorateurFichier.setPreferredSize(tailleBout);
+        ouvrir.setPreferredSize(tailleBout);
+        download.setPreferredSize(tailleBout);
         for (JButton b : listeDirectoryButton) {
             b.setPreferredSize(tailleFolder);
             b.setBackground(Color.cyan);

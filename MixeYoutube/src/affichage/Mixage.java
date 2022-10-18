@@ -27,6 +27,8 @@ public class Mixage extends JPanel implements ChangeListener , ActionListener{
     public ArrayList<LecteurMp3> mix= new ArrayList<>();
     static public Dimension tailleMixage;
     static public JSlider volumeMaster; 
+    public JLabel Master= new JLabel("Master : ");
+    public JLabel Switch =new JLabel("Switch : ");
     int nbrPiste;
     
     static public JComboBox<Integer> Choix1= new JComboBox<>();
@@ -40,14 +42,14 @@ public class Mixage extends JPanel implements ChangeListener , ActionListener{
         this.setLayout(new GridBagLayout());
         GridBagConstraints cont = new GridBagConstraints();
         tailleMixage=getPreferredSize();
-        nbrPiste=(getPreferredSize().height-100)/100;
+        nbrPiste=(getPreferredSize().height-140)/100;
         
         volumeMaster = new JSlider(0, 10000, 10000);
-        volumeMaster.setPreferredSize(new Dimension((int)(getPreferredSize().width*0.40), 40));
+        volumeMaster.setPreferredSize(new Dimension((int)((getPreferredSize().width-Master.getPreferredSize().width-Switch.getPreferredSize().width-Choix1.getPreferredSize().width-Choix2.getPreferredSize().width)*0.45), 40));
         volumeMaster.addChangeListener(this);
         
         volumeChangement = new JSlider(0, 20000, 10000);
-        volumeChangement.setPreferredSize(new Dimension((int)(getPreferredSize().width*0.40), 40));
+        volumeChangement.setPreferredSize(new Dimension((int)((getPreferredSize().width-Master.getPreferredSize().width-Switch.getPreferredSize().width-Choix1.getPreferredSize().width-Choix2.getPreferredSize().width)*0.45), 40));
         volumeChangement.addChangeListener(this);
         volumeChangement.setPaintTrack(true); 
         volumeChangement.setPaintTicks(true);
@@ -59,14 +61,14 @@ public class Mixage extends JPanel implements ChangeListener , ActionListener{
         
         cont.gridx=0;
         cont.gridy=0;
-        this.add(new JLabel("Master : "),cont);
+        this.add(Master,cont);
         cont.gridx=1;
         cont.gridy=0;
         this.add(volumeMaster,cont);
         
         cont.gridx=2;
         cont.gridy=0;
-        this.add(new JLabel("Changement : "),cont);
+        this.add(Switch,cont);
         cont.gridx=3;
         cont.gridy=0;
         this.add(Choix1,cont);
